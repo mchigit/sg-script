@@ -39,19 +39,20 @@ try:
     lastUserLogin = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "user_lastlogin"))
     )
-    driver.execute_script('document.getElementById(\'user_lastlogin\').getElementsByTagName(\'a\')[0].setAttribute(\'target\', \'_self\')')
+    driver.execute_script(
+        'document.getElementById(\'user_lastlogin\').getElementsByTagName(\'a\')[0].setAttribute(\'target\', \'_self\')')
     loginLink = lastUserLogin.find_elements_by_tag_name('a')
+    driver.implicitly_wait(10)
     if len(loginLink) > 0:
         loginLink[0].click()
 
     driver.implicitly_wait(5)
     # driver.switch_to.window(driver.window_handles[1])
-    actualGamePage = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.TAG_NAME, "body"))
-    )
-
 
     while True:
+        actualGamePage = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
         mucai = int(actualGamePage.find_element_by_id('r0').text)
         nitu = int(actualGamePage.find_element_by_id('r1').text)
         tiekuang = int(actualGamePage.find_element_by_id('r2').text)
@@ -60,7 +61,8 @@ try:
         city.parseResourceBuilding(driver)
         print(city.getResource())
 
-        isMilitaryInOpration = driver.find_element_by_id('is_military_training_c')
+        isMilitaryInOpration = driver.find_element_by_id(
+            'is_military_training_c')
         innerChild = isMilitaryInOpration.get_attribute('innerHTML')
         if isMilitaryInOpration.value_of_css_property('display') == 'none' or '无战争' in innerChild:
             print('is going to attack')
@@ -71,13 +73,11 @@ try:
 
         military = Military(driver)
         military.levelUp()
-        
+
         time.sleep(300)
 
 
-    
 finally:
     time.sleep(10)
     driver.quit()
-
 
